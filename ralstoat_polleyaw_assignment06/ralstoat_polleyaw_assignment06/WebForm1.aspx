@@ -41,7 +41,7 @@
                     <asp:TextBox ID="tbComment" runat="server"></asp:TextBox>
                 </td>
                 <td>
-                    <asp:Button ID="btnSubmit" runat="server" Text="Sumbit" />
+                    <asp:Button ID="btnSubmit" runat="server" Text="Submit" />
                 </td>
             </tr>
             <tr>
