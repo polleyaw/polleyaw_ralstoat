@@ -9,9 +9,38 @@
 <body>
     <form id="form1" runat="server">
     <div>
-        <asp:Label ID="Label1" runat="server" Text="Label222222">
-            <br />
-        </asp:Label><asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
+        <table>
+            <tr>
+                <td>
+                    Pick a store
+                    <asp:DropDownList ID="ddStores" runat="server"></asp:DropDownList>
+                </td>
+                <td>
+                    Pick Loyalty Number
+                <asp:DropDownList ID="ddLoyaltyNumber" runat="server"></asp:DropDownList>
+                    </td>
+                <td>
+                    Pick an Employee
+                    <asp:DropDownList ID="ddEmployee" runat="server"></asp:DropDownList>
+                </td>
+                <td>
+                    Pick a transaction type
+                    <asp:DropDownList ID="ddTransactioType" runat="server"></asp:DropDownList>
+                </td>
+                <td>
+                    Add a comment
+                    <asp:TextBox ID="tbComment" runat="server"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:Button ID="btnSubmit" runat="server" Text="Sumbit" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:TextBox ID="tbTransactionDetails" runat="server"></asp:TextBox>
+                </td>
+            </tr>
+        </table>
     </div>
     </form>
 </body>
