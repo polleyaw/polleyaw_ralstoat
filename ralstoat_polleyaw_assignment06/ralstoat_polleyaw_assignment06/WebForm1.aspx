@@ -25,8 +25,17 @@
                 </td>
                 <td>
                     Pick a transaction type
-                    <asp:DropDownList ID="ddTransactioType" runat="server"></asp:DropDownList>
+                    <asp:DropDownList ID="ddTransactionType" runat="server"></asp:DropDownList>
                 </td>
+                <td>
+                    Pick a product
+                    <asp:DropDownList ID="ddProducts" runat="server"></asp:DropDownList>
+                </td>
+                <td>
+                    How many of the product?
+                    <asp:TextBox ID="tbNumberOfProduct" runat="server"></asp:TextBox>
+                </td>
+
                 <td>
                     Add a comment
                     <asp:TextBox ID="tbComment" runat="server"></asp:TextBox>

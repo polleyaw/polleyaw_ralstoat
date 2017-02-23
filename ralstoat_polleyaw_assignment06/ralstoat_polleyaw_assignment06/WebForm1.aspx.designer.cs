@@ -49,13 +49,31 @@ namespace ralstoat_polleyaw_assignment06 {
         protected global::System.Web.UI.WebControls.DropDownList ddEmployee;
         
         /// <summary>
-        /// ddTransactioType control.
+        /// ddTransactionType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddTransactioType;
+        protected global::System.Web.UI.WebControls.DropDownList ddTransactionType;
+        
+        /// <summary>
+        /// ddProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddProducts;
+        
+        /// <summary>
+        /// tbNumberOfProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbNumberOfProduct;
         
         /// <summary>
         /// tbComment control.
