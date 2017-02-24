@@ -12,8 +12,9 @@ namespace ralstoat_polleyaw_assignment06
         protected void Page_Load(object sender, EventArgs e)
         {
             // This is a test.
-            
-            
+
+            Response.Write(Convert.ToDateTime(DateTime.Now.ToShortDateString()));
+            //Response.Write(DateTime.Now.ToShortTimeString());
         }
     }
 }
