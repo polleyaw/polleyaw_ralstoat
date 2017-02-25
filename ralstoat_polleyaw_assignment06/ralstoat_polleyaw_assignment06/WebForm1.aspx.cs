@@ -123,7 +123,7 @@ namespace ralstoat_polleyaw_assignment06
         // Defines the method to open a connectio to the database.
         private void openConnection()
         {
-            
+
             try
             {
                 // Creates a connection to the database that can be opened or closed by utilizing the connection string.

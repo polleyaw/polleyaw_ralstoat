@@ -13,19 +13,19 @@
             <tr>
                 <td>
                     Pick a store
-                    <asp:DropDownList ID="ddStores" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddStores_SelectedIndexChanged"></asp:DropDownList>
+                    <asp:DropDownList ID="ddStores" runat="server"></asp:DropDownList>
                 </td>
                 <td>
                     Pick Loyalty Number
-                <asp:DropDownList ID="ddLoyaltyNumber" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddLoyaltyNumber_SelectedIndexChanged"></asp:DropDownList>
+                <asp:DropDownList ID="ddLoyaltyNumber" runat="server"></asp:DropDownList>
                     </td>
                 <td>
                     Pick an Employee
-                    <asp:DropDownList ID="ddEmployee" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddEmployee_SelectedIndexChanged"></asp:DropDownList>
+                    <asp:DropDownList ID="ddEmployee" runat="server"></asp:DropDownList>
                 </td>
                 <td>
                     Pick a transaction type
-                    <asp:DropDownList ID="ddTransactionType" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddTransactionType_SelectedIndexChanged"></asp:DropDownList>
+                    <asp:DropDownList ID="ddTransactionType" runat="server"></asp:DropDownList>
                 </td>
                 <td>
                     Pick a product
