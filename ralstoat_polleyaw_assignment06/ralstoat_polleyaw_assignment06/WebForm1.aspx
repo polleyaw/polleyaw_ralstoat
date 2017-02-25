@@ -24,8 +24,15 @@
 </head>
 <body>
     <form id="form1" runat="server">
+
     <div>
+        
         <table style="background-color:dodgerblue; border-color:crimson; max-width:605px" border="1">
+            <tr>
+                <td colspan="2" style="border-color:darkblue; text-align:center">
+                    <asp:Label ID="lblHeader" runat="server" Font-Size="30" ForeColor="White" Font-Bold="true" Text="Transaction Creator"></asp:Label>
+                </td>
+            </tr>
             <tr >
                 <td style="border-color:darkblue" class="auto-style6">
                     Store&nbsp;
