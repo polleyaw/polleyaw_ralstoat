@@ -36,28 +36,28 @@
             <tr >
                 <td style="border-color:darkblue" class="auto-style6">
                     Store&nbsp;
-                    <asp:DropDownList ID="ddStores" runat="server" AutoPostBack="True" Height="25px" Width="300px"></asp:DropDownList>
+                    <asp:DropDownList ID="ddStores" runat="server" Height="25px" Width="300px" OnSelectedIndexChanged="ddStores_SelectedIndexChanged"></asp:DropDownList>
                 </td>
                 
             
                 <td style="border-color:darkblue" class="auto-style2">
                     Loyalty Number
-                <asp:DropDownList ID="ddLoyaltyNumber" runat="server" AutoPostBack="True" Height="25px" Width="300px"></asp:DropDownList>
+                <asp:DropDownList ID="ddLoyaltyNumber" runat="server" Height="25px" Width="300px" OnSelectedIndexChanged="ddLoyaltyNumber_SelectedIndexChanged"></asp:DropDownList>
                     </td>
                 </tr>
             <tr>
                 <td style="border-color:darkblue" class="auto-style6">
                     Employee
-                    <asp:DropDownList ID="ddEmployee" runat="server" AutoPostBack="True" Height="25px" Width="300px"></asp:DropDownList>
+                    <asp:DropDownList ID="ddEmployee" runat="server" Height="25px" Width="300px" OnSelectedIndexChanged="ddEmployee_SelectedIndexChanged"></asp:DropDownList>
                 </td>
                 <td style="border-color:darkblue" class="auto-style2">
                     Transaction Type
-                    <asp:DropDownList ID="ddTransactionType" runat="server" AutoPostBack="True" Height="25px" Width="300px"></asp:DropDownList>
+                    <asp:DropDownList ID="ddTransactionType" runat="server" Height="25px" Width="300px" OnSelectedIndexChanged="ddTransactionType_SelectedIndexChanged"></asp:DropDownList>
                 </td>
                 </tr>
             <tr>
                 <td style="border-color:darkblue" class="auto-style6">
-                    Product <asp:DropDownList ID="ddProducts" runat="server" Height="25px" Width="300px"></asp:DropDownList>
+                    Product <asp:DropDownList ID="ddProducts" runat="server" Height="25px" Width="300px" OnSelectedIndexChanged="ddProducts_SelectedIndexChanged"></asp:DropDownList>
                 </td>
                 <td style="border-color:darkblue" class="auto-style2">
                     Product Quantity
@@ -73,14 +73,14 @@
             </tr>
             <tr>
                 <td style="border-color:darkblue" colspan="2" class="auto-style8">
-                    <asp:Button ID="btnSubmit" runat="server" Font-Size="Large" Font-Bold="false" ForeColor="DarkBlue" Text="Submit Transaction" Height="45px" Width="604px" />
+                    <asp:Button ID="btnSubmit" runat="server" Font-Size="Large" Font-Bold="false" ForeColor="DarkBlue" Text="Submit Transaction" Height="45px" Width="604px" OnClick="btnSubmit_Click" />
                 </td>                
                                    
             </tr>
             <tr>
                 <td style="border-color:darkblue" colspan="2" >
                     Transaction Details
-                    <asp:TextBox ID="tbTransactionDetails" runat="server" Height="198px" Width="604px"></asp:TextBox> 
+                    <asp:TextBox ID="tbTransactionDetails" runat="server" Height="198px" Width="604px" ReadOnly="True" TextMode="MultiLine"></asp:TextBox> 
                 </td>
             </tr>
         </table>

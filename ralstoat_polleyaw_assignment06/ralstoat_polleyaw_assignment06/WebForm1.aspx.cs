@@ -22,7 +22,7 @@ namespace ralstoat_polleyaw_assignment06
         private ArrayList storeIDs = new ArrayList();
         private int selectedStoreID;
 
-        private ArrayList loyalNumberIDs = new ArrayList();
+        private ArrayList loyaltyNumberIDs = new ArrayList();
         private int selectedLoyaltyNumberID;
 
         private ArrayList employeeIDs = new ArrayList();
@@ -31,18 +31,23 @@ namespace ralstoat_polleyaw_assignment06
         private ArrayList transactionTypeIDs = new ArrayList();
         private int selectedTransactionTypeID;
 
+        private ArrayList productIDs = new ArrayList();
+        private int selectedProductID;
+        private ArrayList initialPrices = new ArrayList();
+        private string chosenProductPrice;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             openConnection();
-            readData(ddStores, "SELECT StoreID, Store FROM tStore;", storeIDs);
+            readData(ddStores, "SELECT COUNT(*) FROM tStore; SELECT StoreID, Store FROM tStore;", storeIDs);
 
-            readData(ddLoyaltyNumber, "SELECT LoyaltyID, LoyaltyNumber FROM tLoyalty;", loyalNumberIDs);
+            readData(ddLoyaltyNumber, "SELECT COUNT(*) FROM tLoyalty; SELECT LoyaltyID, LoyaltyNumber FROM tLoyalty;", loyaltyNumberIDs);
 
-            readData(ddEmployee, "SELECT EmplID, FirstName, LastName FROM tEmpl;", employeeIDs);
+            readData(ddEmployee, "SELECT COUNT(*) FROM tEmpl; SELECT EmplID, FirstName, LastName FROM tEmpl;", employeeIDs);
 
-            readData(ddTransactionType, "SELECT TransactionTypeID, TransactionType FROM tTransactionType;", transactionTypeIDs);
-            //Response.Write(Convert.ToDateTime(DateTime.Now.ToShortDateString()));
-            //Response.Write(DateTime.Now.ToShortTimeString());
+            readData(ddTransactionType, "SELECT COUNT(*) FROM tTransactionType; SELECT TransactionTypeID, TransactionType FROM tTransactionType;", transactionTypeIDs);
+
+            readData(ddProducts, "SELECT COUNT(*) FROM tProduct; SELECT tProduct.ProductID, tBrand.Brand, tName.Name, tProduct.Description, tProduct.InitialPricePerSellableUnit FROM tProduct INNER JOIN tBrand ON tProduct.BrandID = tBrand.BrandID INNER JOIN tName ON tProduct.NameID = tName.NameID;", productIDs);
         }
 
         private void readData(DropDownList control, string query, ArrayList primaryKeys)
@@ -50,7 +55,10 @@ namespace ralstoat_polleyaw_assignment06
             // Stores the results of the query.
             String results;
             String results2;
+            String results3;
+            String results4;
             int ids;
+            int count = -1;
 
             // Establishes the command for the given query on the connection.
             command = new SqlCommand(query, connection);
@@ -61,42 +69,73 @@ namespace ralstoat_polleyaw_assignment06
                 // Reads from the database.
                 reader = command.ExecuteReader();
 
-                // Determines if anything was returned.
-                if (reader.HasRows)
-                {
-                    // Adds spaces between the items returned.
-                    control.Items.Add(" ");
-                    primaryKeys.Add(-1);
+                // Adds spaces between the items returned.
+                control.Items.Add(" ");
+                primaryKeys.Add(-1);
 
+                // Determines if anything was returned.
+                while (reader.HasRows)
+                {
                     // Loops through all items that match the query in the database.
                     while (reader.Read())
                     {
-                        if (reader.FieldCount == 2)
+                        if (reader.FieldCount == 1)
                         {
-                            // Stores the returns.
-                            ids = reader.GetInt32(0);
-                            results = reader.GetString(1);
-
-                            // Adds returned ids to ArrayList.
-                            primaryKeys.Add(ids);
-                            // Adds what is returned to the drop down list.
-                            control.Items.Add(results);
+                            count = reader.GetInt32(0);
                         }
-                        else
+                        else if (reader.FieldCount == 2)
                         {
                             // Stores the returns.
                             ids = reader.GetInt32(0);
                             results = reader.GetString(1);
-                            results2 = reader.GetString(2);
 
                             // Adds returned ids to ArrayList.
                             primaryKeys.Add(ids);
                             // Adds what is returned to the drop down list.
-                            control.Items.Add(results + " " + results2);
+                            if (control.Items.Count != count + 2)
+                            {
+                                control.Items.Add(results);
+                            }    
+                        }
+                        else if (reader.FieldCount == 3)
+                        {
+                            // Stores the returns.
+                            ids = reader.GetInt32(0);
+                            results = reader.GetString(1).Trim();
+                            results2 = reader.GetString(2).Trim();
+
+                            // Adds returned ids to ArrayList.
+                            primaryKeys.Add(ids);
+                            // Adds what is returned to the drop down list.
+                            if (control.Items.Count != count + 2)
+                            {
+                                control.Items.Add(results + " " + results2);
+                            }
+                        }
+                        else if (reader.FieldCount == 5)
+                        {
+                            // Stores the returns.
+                            ids = reader.GetInt32(0);
+                            results = reader.GetString(1).Trim();
+                            results2 = reader.GetString(2).Trim();
+                            results3 = reader.GetString(3).Trim();
+                            results4 = reader.GetSqlMoney(4).ToString().Trim();
+
+                            // Adds returned ids to ArrayList.
+                            primaryKeys.Add(ids);
+                            // Adds what is returned to the drop down list.
+                            if (control.Items.Count != count + 2)
+                            {
+                                control.Items.Add(results + " " + results2 + " " + results3);
+                            }
+
+                            // Adds extra information requested to the appropriate class member.
+                            initialPrices.Add(results4);
                         }
                     }
+                    reader.NextResult();
                 }
-
+                
                 // Attempts to close the reader.
                 try { reader.Close(); }
                 // Displays an error if there is an issue closing the reader.
@@ -154,7 +193,7 @@ namespace ralstoat_polleyaw_assignment06
         {
             if (ddLoyaltyNumber.SelectedIndex != 0)
             {
-                selectedLoyaltyNumberID = Convert.ToInt32(loyalNumberIDs[ddLoyaltyNumber.SelectedIndex]);
+                selectedLoyaltyNumberID = Convert.ToInt32(loyaltyNumberIDs[ddLoyaltyNumber.SelectedIndex]);
             }
         }
 
@@ -172,6 +211,69 @@ namespace ralstoat_polleyaw_assignment06
             {
                 selectedTransactionTypeID = Convert.ToInt32(transactionTypeIDs[ddTransactionType.SelectedIndex]);
             }
+        }
+
+        protected void ddProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddProducts.SelectedIndex != 0)
+            {
+                int stuff = ddProducts.SelectedIndex;
+                int stuff2 = productIDs.Count;
+                selectedProductID = Convert.ToInt32(productIDs[ddProducts.SelectedIndex]);
+                chosenProductPrice = Convert.ToString(initialPrices[ddProducts.SelectedIndex - 1]);
+            }
+        }
+
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            DateTime date = DateTime.Now.Date;
+            TimeSpan time = DateTime.Now.TimeOfDay;
+            int quantity = Convert.ToInt32(tbNumberOfProduct.Text);
+            tbTransactionDetails.Text = "This transaction was executed on " + date.ToShortDateString() + " at " + time.ToString().Substring(0,time.ToString().IndexOf(".")) + "."
+                + Environment.NewLine + "The store selected is " + ddStores.SelectedItem.ToString().Trim() + " with its store ID as " + selectedStoreID + "."
+                + Environment.NewLine + "The loyalty number selected is " + ddLoyaltyNumber.SelectedItem.ToString().Trim() + " with its loyalty number ID as " + selectedLoyaltyNumberID + "."
+                + Environment.NewLine + "The employee selected is " + ddEmployee.SelectedItem.ToString().Trim() + " with their employee ID as " + selectedEmployeeID + "."
+                + Environment.NewLine + "The type of transaction selected is " + ddTransactionType.SelectedItem.ToString().Trim() + " with its transaction type ID as " + selectedTransactionTypeID + "."
+                + Environment.NewLine + "The product chosen is \"" + ddProducts.SelectedItem.ToString().Trim() + "\" with its product ID as " + selectedProductID + "."
+                + Environment.NewLine + "The quantity of product specified is " + quantity.ToString() + "."
+                + Environment.NewLine + "The price per unit for the product is " + chosenProductPrice + "."
+                + Environment.NewLine + "No coupon is given so the price per unit per customer is the same as the line above."
+                + Environment.NewLine + "The comment given is as follows: " + tbComment.Text.ToString();
+
+            SqlCommand storedProc = new SqlCommand("spAddTransactionAndDetail", connection);
+            storedProc.CommandType = System.Data.CommandType.StoredProcedure;
+
+            storedProc.Parameters.Add("@LoyaltyID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@LoyaltyID"].Value = selectedLoyaltyNumberID;
+            storedProc.Parameters.Add("@DateOfTransaction", System.Data.SqlDbType.Date);
+            storedProc.Parameters["@DateOfTransaction"].Value = date;
+            storedProc.Parameters.Add("@TimeOfTransaction", System.Data.SqlDbType.Time);
+            storedProc.Parameters["@TimeOfTransaction"].Value = time;
+            storedProc.Parameters.Add("@TransactionTypeID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@TransactionTypeID"].Value = selectedTransactionTypeID;
+            storedProc.Parameters.Add("@StoreID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@StoreID"].Value = selectedStoreID;
+            storedProc.Parameters.Add("@EmplID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@EmplID"].Value = selectedEmployeeID;
+            storedProc.Parameters.Add("@ProductID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@ProductID"].Value = selectedProductID;
+            storedProc.Parameters.Add("@Qty", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@Qty"].Value = quantity;
+            storedProc.Parameters.Add("@PricePerSellableUnitAsMarked", System.Data.SqlDbType.Money);
+            storedProc.Parameters["@PricePerSellableUnitAsMarked"].Value = chosenProductPrice;
+            storedProc.Parameters.Add("@PricePerSellableUnitToTheCustomer", System.Data.SqlDbType.Money);
+            storedProc.Parameters["@PricePerSellableUnitToTheCustomer"].Value = chosenProductPrice;
+            storedProc.Parameters.Add("@TransactionComment", System.Data.SqlDbType.NVarChar);
+            storedProc.Parameters["@TransactionComment"].Value = tbComment.Text.ToString();
+            storedProc.Parameters.Add("@TransactionDetailComment", System.Data.SqlDbType.NVarChar);
+            storedProc.Parameters["@TransactionDetailComment"].Value = tbComment.Text.ToString();
+            storedProc.Parameters.Add("@CouponDetailID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@CouponDetailID"].Value = 0;
+            storedProc.Parameters.Add("@TransactionID", System.Data.SqlDbType.Int);
+            storedProc.Parameters["@TransactionID"].Value = 0;
+            
+            //storedProc.ExecuteNonQuery();
+            
         }
     }
 }
