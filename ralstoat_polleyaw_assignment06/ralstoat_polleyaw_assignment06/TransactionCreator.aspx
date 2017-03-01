@@ -1,4 +1,16 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TransactionCreator.aspx.cs" Inherits="ralstoat_polleyaw_assignment06.WebForm1" %>
+<%--/***********************************************************************************************************************************************************************************************
+ * Assignment 6
+ * Adam Ralston (ralstoat@mail.uc.edu) and Andrew Polley (polleyaw@mail.uc.edu)
+ * IT3047C Web Server App Dev
+ * The purpose of this assignment was to create a web form that accepted inputs from a user which upon submission
+ * will execute a stored procedure with the inputted values to create a record in the transaction table and a record
+ * in the transaction detail table of the grocery store simulator database.
+ * Due Date: 3/1/2017
+ *
+ * Citations: The stored procedure was provided to us by Professor Bill Nicholson to reference.
+ **********************************************************************************************************************************************************************************************/
+ --%>
 
 <!DOCTYPE html>
 
