@@ -10,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace ralstoat_polleyaw_assignment06
 {
@@ -39,6 +40,13 @@ namespace ralstoat_polleyaw_assignment06
         protected void Page_Load(object sender, EventArgs e)
         {
             openConnection();
+            ddStores.Items.Clear();
+            ddLoyaltyNumber.Items.Clear();
+            ddTransactionType.Items.Clear();
+            ddEmployee.Items.Clear();
+            ddProducts.Items.Clear();
+            tbNumberOfProduct.Text = "";
+            tbComment.Text = "";
             readData(ddStores, "SELECT COUNT(*) FROM tStore; SELECT StoreID, Store FROM tStore;", storeIDs);
 
             readData(ddLoyaltyNumber, "SELECT COUNT(*) FROM tLoyalty; SELECT LoyaltyID, LoyaltyNumber FROM tLoyalty;", loyaltyNumberIDs);
@@ -224,56 +232,88 @@ namespace ralstoat_polleyaw_assignment06
             }
         }
 
+        protected int retrieveQuantity()
+        {
+            if (tbNumberOfProduct.Text == "")
+            {
+                return 0;
+            }
+            else if (Regex.IsMatch(tbNumberOfProduct.Text, "\\D") != true)
+            {
+                int quantity = Convert.ToInt32(tbNumberOfProduct.Text);
+                if (quantity >= 1 || quantity <= 200)
+                {
+                    return quantity;
+                }
+            }
+            return -1;
+        }
+
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            DateTime date = DateTime.Now.Date;
-            TimeSpan time = DateTime.Now.TimeOfDay;
-            int quantity = Convert.ToInt32(tbNumberOfProduct.Text);
-            tbTransactionDetails.Text = "This transaction was executed on " + date.ToShortDateString() + " at " + time.ToString().Substring(0,time.ToString().IndexOf(".")) + "."
-                + Environment.NewLine + "The store selected is " + ddStores.SelectedItem.ToString().Trim() + " with its store ID as " + selectedStoreID + "."
-                + Environment.NewLine + "The loyalty number selected is " + ddLoyaltyNumber.SelectedItem.ToString().Trim() + " with its loyalty number ID as " + selectedLoyaltyNumberID + "."
-                + Environment.NewLine + "The employee selected is " + ddEmployee.SelectedItem.ToString().Trim() + " with their employee ID as " + selectedEmployeeID + "."
-                + Environment.NewLine + "The type of transaction selected is " + ddTransactionType.SelectedItem.ToString().Trim() + " with its transaction type ID as " + selectedTransactionTypeID + "."
-                + Environment.NewLine + "The product chosen is \"" + ddProducts.SelectedItem.ToString().Trim() + "\" with its product ID as " + selectedProductID + "."
-                + Environment.NewLine + "The quantity of product specified is " + quantity.ToString() + "."
-                + Environment.NewLine + "The price per unit for the product is " + chosenProductPrice + "."
-                + Environment.NewLine + "No coupon is given so the price per unit per customer is the same as the line above."
-                + Environment.NewLine + "The comment given is as follows: " + tbComment.Text.ToString();
+            int quantity = retrieveQuantity();
+            if (ddStores.SelectedIndex != 0 && ddLoyaltyNumber.SelectedIndex != 0 && ddEmployee.SelectedIndex != 0 && ddTransactionType.SelectedIndex != 0 && ddProducts.SelectedIndex != 0 && quantity != -1 && quantity != 0)
+            {
+                DateTime date = DateTime.Now.Date;
+                TimeSpan time = DateTime.Now.TimeOfDay;
 
-            SqlCommand storedProc = new SqlCommand("spAddTransactionAndDetail", connection);
-            storedProc.CommandType = System.Data.CommandType.StoredProcedure;
+                tbTransactionDetails.Text = "This transaction was executed on " + date.ToShortDateString() + " at " + time.ToString().Substring(0, time.ToString().IndexOf(".")) + "."
+                    + Environment.NewLine + "The store selected is " + ddStores.SelectedItem.ToString().Trim() + " with its store ID as " + selectedStoreID + "."
+                    + Environment.NewLine + "The loyalty number selected is " + ddLoyaltyNumber.SelectedItem.ToString().Trim() + " with its loyalty number ID as " + selectedLoyaltyNumberID + "."
+                    + Environment.NewLine + "The employee selected is " + ddEmployee.SelectedItem.ToString().Trim() + " with their employee ID as " + selectedEmployeeID + "."
+                    + Environment.NewLine + "The type of transaction selected is " + ddTransactionType.SelectedItem.ToString().Trim() + " with its transaction type ID as " + selectedTransactionTypeID + "."
+                    + Environment.NewLine + "The product chosen is \"" + ddProducts.SelectedItem.ToString().Trim() + "\" with its product ID as " + selectedProductID + "."
+                    + Environment.NewLine + "The quantity of product specified is " + quantity.ToString() + "."
+                    + Environment.NewLine + "The price per unit for the product is " + chosenProductPrice + "."
+                    + Environment.NewLine + "No coupon is given so the price per unit per customer is the same as the line above."
+                    + Environment.NewLine + "The comment given is as follows: " + tbComment.Text.ToString();
 
-            storedProc.Parameters.Add("@LoyaltyID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@LoyaltyID"].Value = selectedLoyaltyNumberID;
-            storedProc.Parameters.Add("@DateOfTransaction", System.Data.SqlDbType.Date);
-            storedProc.Parameters["@DateOfTransaction"].Value = date;
-            storedProc.Parameters.Add("@TimeOfTransaction", System.Data.SqlDbType.Time);
-            storedProc.Parameters["@TimeOfTransaction"].Value = time;
-            storedProc.Parameters.Add("@TransactionTypeID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@TransactionTypeID"].Value = selectedTransactionTypeID;
-            storedProc.Parameters.Add("@StoreID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@StoreID"].Value = selectedStoreID;
-            storedProc.Parameters.Add("@EmplID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@EmplID"].Value = selectedEmployeeID;
-            storedProc.Parameters.Add("@ProductID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@ProductID"].Value = selectedProductID;
-            storedProc.Parameters.Add("@Qty", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@Qty"].Value = quantity;
-            storedProc.Parameters.Add("@PricePerSellableUnitAsMarked", System.Data.SqlDbType.Money);
-            storedProc.Parameters["@PricePerSellableUnitAsMarked"].Value = chosenProductPrice;
-            storedProc.Parameters.Add("@PricePerSellableUnitToTheCustomer", System.Data.SqlDbType.Money);
-            storedProc.Parameters["@PricePerSellableUnitToTheCustomer"].Value = chosenProductPrice;
-            storedProc.Parameters.Add("@TransactionComment", System.Data.SqlDbType.NVarChar);
-            storedProc.Parameters["@TransactionComment"].Value = tbComment.Text.ToString();
-            storedProc.Parameters.Add("@TransactionDetailComment", System.Data.SqlDbType.NVarChar);
-            storedProc.Parameters["@TransactionDetailComment"].Value = tbComment.Text.ToString();
-            storedProc.Parameters.Add("@CouponDetailID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@CouponDetailID"].Value = 0;
-            storedProc.Parameters.Add("@TransactionID", System.Data.SqlDbType.Int);
-            storedProc.Parameters["@TransactionID"].Value = 0;
-            
-            //storedProc.ExecuteNonQuery();
-            
+                SqlCommand storedProc = new SqlCommand("spAddTransactionAndDetail", connection);
+                storedProc.CommandType = System.Data.CommandType.StoredProcedure;
+
+                storedProc.Parameters.Add("@LoyaltyID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@LoyaltyID"].Value = selectedLoyaltyNumberID;
+                storedProc.Parameters.Add("@DateOfTransaction", System.Data.SqlDbType.Date);
+                storedProc.Parameters["@DateOfTransaction"].Value = date;
+                storedProc.Parameters.Add("@TimeOfTransaction", System.Data.SqlDbType.Time);
+                storedProc.Parameters["@TimeOfTransaction"].Value = time;
+                storedProc.Parameters.Add("@TransactionTypeID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@TransactionTypeID"].Value = selectedTransactionTypeID;
+                storedProc.Parameters.Add("@StoreID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@StoreID"].Value = selectedStoreID;
+                storedProc.Parameters.Add("@EmplID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@EmplID"].Value = selectedEmployeeID;
+                storedProc.Parameters.Add("@ProductID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@ProductID"].Value = selectedProductID;
+                storedProc.Parameters.Add("@Qty", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@Qty"].Value = quantity;
+                storedProc.Parameters.Add("@PricePerSellableUnitAsMarked", System.Data.SqlDbType.Money);
+                storedProc.Parameters["@PricePerSellableUnitAsMarked"].Value = chosenProductPrice;
+                storedProc.Parameters.Add("@PricePerSellableUnitToTheCustomer", System.Data.SqlDbType.Money);
+                storedProc.Parameters["@PricePerSellableUnitToTheCustomer"].Value = chosenProductPrice;
+                storedProc.Parameters.Add("@TransactionComment", System.Data.SqlDbType.NVarChar);
+                storedProc.Parameters["@TransactionComment"].Value = tbComment.Text.ToString();
+                storedProc.Parameters.Add("@TransactionDetailComment", System.Data.SqlDbType.NVarChar);
+                storedProc.Parameters["@TransactionDetailComment"].Value = tbComment.Text.ToString();
+                storedProc.Parameters.Add("@CouponDetailID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@CouponDetailID"].Value = 0;
+                storedProc.Parameters.Add("@TransactionID", System.Data.SqlDbType.Int);
+                storedProc.Parameters["@TransactionID"].Value = 0;
+
+                //storedProc.ExecuteNonQuery(); 
+            }
+            else
+            {
+                if (quantity == -1)
+                {
+                    tbTransactionDetails.Text = "The quantity must be a nonnegative number between 1 and 200";
+                }
+                else
+                {
+                    tbTransactionDetails.Text = "Error: Please make selections from the drop downs and fill in the text boxes before submitting.";
+
+                }
+            }
         }
     }
 }
