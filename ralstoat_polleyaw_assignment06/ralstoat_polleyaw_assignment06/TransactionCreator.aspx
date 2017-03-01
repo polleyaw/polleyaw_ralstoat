@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="ralstoat_polleyaw_assignment06.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TransactionCreator.aspx.cs" Inherits="ralstoat_polleyaw_assignment06.WebForm1" %>
 
 <!DOCTYPE html>
 
